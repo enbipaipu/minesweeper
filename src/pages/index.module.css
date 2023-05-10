@@ -13,22 +13,20 @@
   display: flex;
   flex-wrap: wrap;
   background-color: rgb(128 128 128);
-  height: 540px;
-  width: 540px;
+  height: 270px;
+  width: 270px;
 }
 
 .cell {
-  height: 60px;
-  width: 60px;
+  height: 30px;
+  width: 30px;
   border: 3px solid rgb(72 72 72);
   position: relative;
 }
 
 .stone {
   position: absolute;
-  height: 54px;
-  width: 54px;
+  height: 30px;
+  width: 30px;
   background-color: rgb(219 36 36);
-  margin: 0 auto;
-  top: 0%;
 }
