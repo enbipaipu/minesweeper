@@ -64,8 +64,8 @@ const Home = () => {
     [-1, 1],
   ];
 
-  const clickStone = (x: number, y: number) => {
-    console.log(x, y);
+  const clickStone = (y: number, x: number) => {
+    console.log(y, x);
     const newBoard = JSON.parse(JSON.stringify(board));
 
     // -1 -> 石
@@ -75,15 +75,17 @@ const Home = () => {
     //10-> 石＋旗
     //11-> ボムセル
 
-    const openStone = (x: number, y: number) => {
+    function openStone(x: number, y: number) {
       let bombCount = 0;
 
       if (bombMap[y][x] === 1) {
-        //爆破セル 11を表示
+        console.log('11'); //爆破セル 11を表示
       } else if (bombMap[y][x] === 0) {
-        //周りのボムの数を数えて、その数を表示
+        console.log('a'); //周りのボムの数を数えて、その数を表示
         for (const i of directions) {
-          if (bombMap[x + i[0]][y + i[1]] === 1) {
+          if (bombMap[y + i[0]][x + i[1]] === undefined) {
+            continue;
+          } else if (bombMap[y + i[0]][x + i[1]] === 1) {
             bombCount += 1;
           }
         }
@@ -95,31 +97,33 @@ const Home = () => {
           //数字に対応した数字セルを出現させる
         }
       }
-    };
+    }
 
-    //計算値
-
-    // userInputs.forEach((row) => {
-    //   const boarRow = [...row];
-    //   board.push(boardRow);
-    // });
-
-    return (
-      <div className={styles.container}>
-        <div className={styles.board}>
-          {board.map((row, y) =>
-            row.map((val, x) => (
-              <div className={styles.cell} key={`${x}-${y}`}>
-                {val !== 0 &&
-                  (val === -1 ? (
-                    <div className={styles.stone} onClick={() => clickStone(x, y)} />
-                  ) : null)}
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    );
+    openStone(y, x);
   };
+
+  //計算値
+
+  // userInputs.forEach((row) => {
+  //   const boarRow = [...row];
+  //   board.push(boardRow);
+  // });
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.board}>
+        {board.map((row, y) =>
+          row.map((val, x) => (
+            <div className={styles.cell} key={`${x}-${y}`}>
+              {val !== 0 &&
+                (val === -1 ? (
+                  <div className={styles.stone} onClick={() => clickStone(y, x)} />
+                ) : null)}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 };
 export default Home;
