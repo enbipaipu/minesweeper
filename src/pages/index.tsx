@@ -103,11 +103,15 @@ const Home = () => {
     //boardを調べる
     const checkBoard = () => {
       for (let i = 0; i < 9; i += 1) {
-        for (let h = 0; h < 9; h += 1) {}
+        for (let h = 0; h < 9; h += 1) {
+          //
+        }
       }
     };
     //石を変える
-    function openStone(x: number, y: number) {}
+    function openStone(x: number, y: number) {
+      //
+    }
 
     //本プログラム
     //userInputsによる条件分岐
