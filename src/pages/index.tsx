@@ -24,10 +24,10 @@ const Home = () => {
   //1->ボムあり
 
   const [bombMap, setBombMap] = useState([
+    [1, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -52,7 +52,6 @@ const Home = () => {
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
 
-  //prett -ignore
   const directions = [
     [-1, 0],
     [-1, -1],
@@ -67,6 +66,8 @@ const Home = () => {
   const clickStone = (y: number, x: number) => {
     console.log(y, x);
     const newBoard = JSON.parse(JSON.stringify(board));
+    const newuserInput = JSON.parse(JSON.stringify(board));
+    const bombMap = JSON.parse(JSON.stringify(board));
 
     // -1 -> 石
     // 0 -> 画像なしセル
@@ -74,40 +75,50 @@ const Home = () => {
     //9-> 石＋？
     //10-> 石＋旗
     //11-> ボムセル
+    const makeBombRandom = (y: number, x: number) => {
+      //
+    };
+    const makeBomb = (y: number, x: number) => {
+      let n = 0;
+      while (n < 10) {
+        makeBombRandom(y, x);
+        n += 1;
+      }
+    };
 
-    function openStone(x: number, y: number) {
+    const checkAround = (y: number, x: number) => {
+      const dis = directions;
       let bombCount = 0;
-
-      if (bombMap[y][x] === 1) {
-        console.log('11'); //爆破セル 11を表示
-      } else if (bombMap[y][x] === 0) {
-        console.log('a'); //周りのボムの数を数えて、その数を表示
-        for (const i of directions) {
-          if (bombMap[y + i[0]][x + i[1]] === undefined) {
-            continue;
-          } else if (bombMap[y + i[0]][x + i[1]] === 1) {
-            bombCount += 1;
-          }
-        }
-        if (bombCount === 0) {
-          for (const t of directions) {
-            openStone(y + t[0], x + t[1]); //再起関数
-          }
-        } else if (bombCount >= 1 || bombCount <= 8) {
-          //数字に対応した数字セルを出現させる
+      for (const dis of directions) {
+        if (bombMap[y + dis[0]][x + dis[1]] === undefined) {
+          break;
+        } else if (bombMap[y + dis[0]][x + dis[1]] === 0) {
+          break;
+        } else if (board[y + dis[0]][x + dis[1]] === 1) {
+          bombCount += 1;
         }
       }
-    }
+    };
 
-    openStone(y, x);
+    //boardを調べる
+    const checkBoard = () => {
+      for (let i = 0; i < 9; i += 1) {
+        for (let h = 0; h < 9; h += 1) {}
+      }
+    };
+    //石を変える
+    function openStone(x: number, y: number) {}
+
+    //本プログラム
+    //userInputsによる条件分岐
+
+    //計算値(2つのuseStateからボードを作る)（ボードは毎回作り直す）
+
+    // userInputs.forEach((row) => {
+    //   const boarRow = [...row];
+    //   board.push(boardRow);
+    // });
   };
-
-  //計算値
-
-  // userInputs.forEach((row) => {
-  //   const boarRow = [...row];
-  //   board.push(boardRow);
-  // });
 
   return (
     <div className={styles.container}>
@@ -117,7 +128,11 @@ const Home = () => {
             <div className={styles.cell} key={`${x}-${y}`}>
               {val !== 0 &&
                 (val === -1 ? (
-                  <div className={styles.stone} onClick={() => clickStone(y, x)} />
+                  <div
+                    className={styles.stone}
+                    style={{ background: val === -1 ? 'rgb(219, 36, 36)' : '#ffffff0' }}
+                    onClick={() => clickStone(y, x)}
+                  />
                 ) : null)}
             </div>
           ))
