@@ -24,10 +24,10 @@ const Home = () => {
   //1->ボムあり
 
   const [bombMap, setBombMap] = useState([
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -36,7 +36,7 @@ const Home = () => {
   ]);
 
   const board: number[][] = [
-    [-1, -1, 0, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -70,18 +70,21 @@ const Home = () => {
   //10-> 石＋旗
   //11-> ボムセル
 
-  let bombCount = 0; //?
-
   const checkAround = (y: number, x: number) => {
-    for (const dis of directions) {
+    let bombCount = 0;
+    for (const dir of directions) {
       //指定した座標の周りを調べる
-      if (bombMap[y + dis[0]][x + dis[1]] === undefined) {
+      if (bombMap[y + dir[0]] === undefined && bombMap[y + dir[0]][x + dir[1]] === undefined) {
         break;
-      } else if (bombMap[y + dis[0]][x + dis[1]] === 0) {
+      } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
         break;
-      } else if (bombMap[y + dis[0]][x + dis[1]] === 1) {
+      } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
         bombCount += 1;
       }
+    }
+    board[y][x] = bombCount;
+    if (bombCount === 0) {
+      checkAround(y, x);
     }
   };
 
@@ -90,12 +93,6 @@ const Home = () => {
     for (let i = 0; i < 9; i += 1) {
       for (let h = 0; h < 9; h += 1) {
         checkAround(i, h);
-        if (bombCount === 0) {
-          board[i][h] = 0;
-          checkAround(i, h);
-        } else if (1 <= bombCount && bombCount <= 8) {
-          //数字に対応した数字セルを表示
-        }
       }
     }
   };
@@ -119,42 +116,37 @@ const Home = () => {
     const newUserInputs = JSON.parse(JSON.stringify(userInputs));
     const newBombMap = JSON.parse(JSON.stringify(bombMap));
 
-    if (isPlaying === false) {
-      //userinput
+    newUserInputs[y][x] = 1;
 
-      const makeBomb = () => {
-        let n = 0;
-        while (n < 10) {
-          const hig = Math.floor(Math.random() * 9);
-          const whi = Math.floor(Math.random() * 9);
-          if (bombMap[hig][whi] === 0) {
-            newBombMap[hig][whi] = 1;
-            n += 1;
-          } else if (bombMap[hig][whi] === 1) {
-            //
-          }
+    //ランダムにボムを生成
+    if (!isPlaying) {
+      let n = 0;
+      while (n < 10) {
+        const height = Math.floor(Math.random() * 9);
+        const width = Math.floor(Math.random() * 9);
+        if (!bombMap[height][width]) {
+          newBombMap[height][width] = 1;
+          n += 1;
         }
-      };
+      }
       setBombMap(newBombMap);
     }
 
     if (isPlaying) {
-      newUserInputs[y][x] === 1;
       if (isFailure) {
-        //ボムを爆破
+        console.log('bom');
       }
     }
-    //userInputsによる条件分岐
-
-    //計算値(2つのuseStateからボードを作る)（ボードは毎回作り直す）
-
-    // userInputs.forEach((row) => {
-    //   const boarRow = [...row];
-    //   board.push(boardRow);
-    // });
-
     setUserInputs(newUserInputs);
   };
+  //userInputsによる条件分岐
+
+  //計算値(2つのuseStateからボードを作る)（ボードは毎回作り直す）
+
+  // userInputs.forEach((row) => {
+  //   const boarRow = [...row];
+  //   board.push(boardRow);
+  // });
 
   return (
     <div className={styles.container}>
