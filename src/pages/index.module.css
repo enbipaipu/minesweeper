@@ -21,7 +21,7 @@
   height: 30px;
   width: 30px;
   background-position: 420px;
-  background-image: url(~/assets/images/icons.png);
+  background-image: url('~/assets/images/icons.png');
 }
 
 .cell {
