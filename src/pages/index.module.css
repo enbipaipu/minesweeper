@@ -17,16 +17,22 @@
   width: 270px;
 }
 
+.icon {
+  height: 30px;
+  width: 30px;
+  background-position: 420px;
+  background-image: url(~/assets/images/icons.png);
+}
+
 .cell {
   height: 30px;
   width: 30px;
-  border: 3px solid rgb(72 72 72);
-  position: relative;
+  border: 2px solid rgb(72 72 72);
+  background-position: center center;
 }
 
 .stone {
-  position: absolute;
-  height: 30px;
-  width: 30px;
+  height: 27px;
+  width: 27px;
   background-color: rgb(219 36 36);
 }

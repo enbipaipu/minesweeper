@@ -1,1 +1,1 @@
-{"version":3,"sources":["./index.module.css"],"names":["container","board","cell","stone"],"mappings":"AAAA;AAAA,E,aAAAA,W,WAAA;AAAA,E,aAWAC,O,WAXA;AAAA,E,aAmBAC,M,WAnBA;AAAA,E,aA0BAC,O,WA1BA;AAAA;AAAA","file":"index.module.css.d.ts","sourceRoot":""}
+{"version":3,"sources":["./index.module.css"],"names":["container","board","icon","cell","stone"],"mappings":"AAAA;AAAA,E,aAAAA,W,WAAA;AAAA,E,aAWAC,O,WAXA;AAAA,E,aAmBAC,M,WAnBA;AAAA,E,aA0BAC,M,WA1BA;AAAA,E,aAiCAC,O,WAjCA;AAAA;AAAA","file":"index.module.css.d.ts","sourceRoot":""}

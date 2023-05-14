@@ -26,7 +26,7 @@ const Home = () => {
   const [bombMap, setBombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -36,8 +36,8 @@ const Home = () => {
   ]);
 
   const board: number[][] = [
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 0, 1, 2, 3, 4, 5, 6, 7],
+    [8, 9, 10, 11, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -70,21 +70,38 @@ const Home = () => {
   //10-> 石＋旗
   //11-> ボムセル
 
+  let bombCount = 0;
+
+  //userInputとbombMapを見てboardを作成
+
   const checkAround = (y: number, x: number) => {
-    let bombCount = 0;
-    for (const dir of directions) {
-      //指定した座標の周りを調べる
-      if (bombMap[y + dir[0]] === undefined && bombMap[y + dir[0]][x + dir[1]] === undefined) {
-        break;
-      } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
-        break;
-      } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
-        bombCount += 1;
+    if (userInputs[y][x] === 1) {
+      for (const dir of directions) {
+        //指定した座標の周りを調べる
+        if (bombMap[y + dir[0]] === undefined && bombMap[y + dir[0]][x + dir[1]] === undefined) {
+          break;
+        } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
+          break;
+        } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
+          bombCount += 1;
+        }
       }
-    }
-    board[y][x] = bombCount;
-    if (bombCount === 0) {
-      checkAround(y, x);
+      board[y][x] = bombCount;
+      if (bombCount === 0) {
+        //周りのuserInputsを１に変える
+        for (const dir of directions) {
+          //指定した座標の周りを調べる
+          if (
+            userInputs[y + dir[0]] === undefined &&
+            userInputs[y + dir[0]][x + dir[1]] === undefined
+          ) {
+            break;
+          } else if (userInputs[y + dir[0]][x + dir[1]] === 0) {
+            userInputs[y + dir[0]][x + dir[1]] = 1;
+            checkAround(y + dir[0], x + dir[1]);
+          }
+        }
+      }
     }
   };
 
@@ -98,18 +115,18 @@ const Home = () => {
   };
   //石を変える
 
-  function openStone(y: number, x: number) {
-    if (board[y][x] === -1) {
-      board[y][x] = 0;
-    }
-    if (bombMap[y][x] === 1) {
-      board[y][x] = 11;
-    }
+  function settingBoard() {
+    checkBoard();
+    //
   }
 
   //本プログラム
+  settingBoard();
 
-  // openStone(y, x);
+  // userInputs.forEach((row) => {
+  //   const boardRow = [...row];
+  //   board.push(boardRow);
+  // });
 
   const clickStone = (y: number, x: number) => {
     console.log(y, x);
@@ -143,10 +160,12 @@ const Home = () => {
 
   //計算値(2つのuseStateからボードを作る)（ボードは毎回作り直す）
 
-  // userInputs.forEach((row) => {
-  //   const boarRow = [...row];
-  //   board.push(boardRow);
-  // });
+  // -1 -> 石
+  // 0 -> 画像なしセル
+  //1~8 -> 数字セル
+  //9-> 石＋？
+  //10-> 石＋旗
+  //11-> ボムセル
 
   return (
     <div className={styles.container}>

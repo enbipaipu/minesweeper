@@ -1,6 +1,7 @@
 declare const styles:
   & Readonly<{ "container": string }>
   & Readonly<{ "board": string }>
+  & Readonly<{ "icon": string }>
   & Readonly<{ "cell": string }>
   & Readonly<{ "stone": string }>
 ;
