@@ -18,8 +18,6 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const farstBombCount = 10;
-
   //0->ボムなし
   //1->ボムあり
 
@@ -36,8 +34,8 @@ const Home = () => {
   ]);
 
   const board: number[][] = [
-    [-1, 0, 1, 2, 3, 4, 5, 6, 7],
-    [8, 9, 10, 11, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -46,6 +44,8 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ];
+  const newUserInputs = JSON.parse(JSON.stringify(userInputs));
+  const newBombMap = JSON.parse(JSON.stringify(bombMap));
 
   const isPlaying = userInputs.some((row) => row.some((input) => input !== 0));
   const isFailure = userInputs.some((row, y) =>
@@ -70,53 +70,53 @@ const Home = () => {
   //10-> 石＋旗
   //11-> ボムセル
 
-  let bombCount = 0;
-
   //userInputとbombMapを見てboardを作成
 
   const checkAround = (y: number, x: number) => {
-    if (userInputs[y][x] === 1) {
+    let bombCount = 0;
+    for (const dir of directions) {
+      //指定した座標の周りを調べる
+      if (bombMap[y + dir[0]] === undefined || bombMap[x + dir[1]] === undefined) {
+        //
+      } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
+        //
+      } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
+        bombCount += 1;
+      }
+    }
+    board[y][x] = bombCount;
+    if (bombCount === 0) {
       for (const dir of directions) {
         //指定した座標の周りを調べる
-        if (bombMap[y + dir[0]] === undefined && bombMap[y + dir[0]][x + dir[1]] === undefined) {
-          break;
-        } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
-          break;
-        } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
-          bombCount += 1;
-        }
-      }
-      board[y][x] = bombCount;
-      if (bombCount === 0) {
-        //周りのuserInputsを１に変える
-        for (const dir of directions) {
-          //指定した座標の周りを調べる
-          if (
-            userInputs[y + dir[0]] === undefined &&
-            userInputs[y + dir[0]][x + dir[1]] === undefined
-          ) {
-            break;
-          } else if (userInputs[y + dir[0]][x + dir[1]] === 0) {
-            userInputs[y + dir[0]][x + dir[1]] = 1;
-            checkAround(y + dir[0], x + dir[1]);
-          }
+        if (board[y + dir[0]] === undefined || board[x + dir[1]] === undefined) {
+          //
+        } else if (board[y + dir[0]][x + dir[1]] === -1) {
+          checkAround(y + dir[0], x + dir[1]);
         }
       }
     }
   };
 
   //boardを調べる
-  const checkBoard = () => {
+  const makeBoard = () => {
     for (let i = 0; i < 9; i += 1) {
       for (let h = 0; h < 9; h += 1) {
-        checkAround(i, h);
+        if (userInputs[i][h] === 1) {
+          checkAround(i, h);
+        }
+        if (isFailure && bombMap[i][h]) {
+          board[i][h] = 11;
+          if (userInputs[i][h] === 1) {
+            board[i][h] = 25;
+          }
+        }
       }
     }
   };
   //石を変える
 
   function settingBoard() {
-    checkBoard();
+    makeBoard();
     //
   }
 
@@ -128,32 +128,35 @@ const Home = () => {
   //   board.push(boardRow);
   // });
 
+  const firstBomb = (y: number, x: number, p: number) => {
+    for (let i = -1; i <= 1; i++) {
+      for (let h = -1; h <= 1; h++) {
+        newBombMap[y + i][x + h] = p;
+      }
+    }
+  };
+
   const clickStone = (y: number, x: number) => {
     console.log(y, x);
-    const newUserInputs = JSON.parse(JSON.stringify(userInputs));
-    const newBombMap = JSON.parse(JSON.stringify(bombMap));
 
     newUserInputs[y][x] = 1;
 
     //ランダムにボムを生成
     if (!isPlaying) {
+      firstBomb(y, x, 1);
       let n = 0;
-      while (n < 10) {
-        const height = Math.floor(Math.random() * 9);
-        const width = Math.floor(Math.random() * 9);
-        if (!bombMap[height][width]) {
-          newBombMap[height][width] = 1;
+      while (n < 9) {
+        const a = Math.floor(Math.random() * 9);
+        const b = Math.floor(Math.random() * 9);
+        if (!newBombMap[a][b]) {
+          newBombMap[a][b] = 1;
           n += 1;
         }
       }
+      firstBomb(y, x, 0);
       setBombMap(newBombMap);
     }
 
-    if (isPlaying) {
-      if (isFailure) {
-        console.log('bom');
-      }
-    }
     setUserInputs(newUserInputs);
   };
   //userInputsによる条件分岐
@@ -172,15 +175,21 @@ const Home = () => {
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((val, x) => (
-            <div className={styles.cell} key={`${x}-${y}`}>
+            <div
+              className={styles.cell}
+              key={`${x}-${y}`}
+              style={{ background: val === 25 ? '#f00' : '#fff0' }}
+              onClick={() => clickStone(y, x)}
+            >
               {val !== 0 &&
-                (val === -1 ? (
+                (val !== -1 ? (
                   <div
-                    className={styles.stone}
-                    style={{ background: val === -1 ? 'rgb(219, 36, 36)' : '#ffffff0' }}
-                    onClick={() => clickStone(y, x)}
+                    className={styles.icon}
+                    style={{ backgroundPosition: `${-(val - 1) * 30}px` }}
                   />
-                ) : null)}
+                ) : (
+                  val < 11 && <div className={styles.stone} />
+                ))}
             </div>
           ))
         )}

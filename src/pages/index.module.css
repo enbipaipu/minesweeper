@@ -6,33 +6,38 @@
   height: 100vh;
   min-height: 100vh;
   padding: 0 0.5rem;
-  color: rgb(146 134 255);
 }
 
 .board {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   background-color: rgb(128 128 128);
   height: 270px;
   width: 270px;
 }
 
 .icon {
+  align-items: center;
+  justify-content: center;
   height: 30px;
   width: 30px;
-  background-position: 420px;
   background-image: url('~/assets/images/icons.png');
 }
 
 .cell {
+  align-items: center;
+  justify-content: center;
   height: 30px;
   width: 30px;
-  border: 2px solid rgb(72 72 72);
-  background-position: center center;
+  border: 1px solid rgb(72 72 72);
 }
 
 .stone {
-  height: 27px;
-  width: 27px;
-  background-color: rgb(219 36 36);
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(87 87 87);
 }
