@@ -123,11 +123,10 @@ const Home = () => {
     }
     console.log('----------');
     console.log(minusCount);
-    if (minusCount === 10) {
-      console.log('aaaaaaaaaaa');
-      //にこちゃんをグラサンに変える
-      alert('終了');
-    }
+    // if (minusCount === 10) {
+    //   //にこちゃんをグラサンに変える
+    //   alert('終了');
+    // }
   };
 
   makeBoard();
