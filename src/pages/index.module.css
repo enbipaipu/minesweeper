@@ -13,7 +13,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  background-color: rgb(128 128 128);
+  background-color: #ccc;
   height: 270px;
   width: 270px;
 }
@@ -26,12 +26,19 @@
   background-image: url('~/assets/images/icons.png');
 }
 
+.flag {
+  height: 100%;
+  width: 100%;
+  background-image: url('~/assets/images/icons.png');
+  background-size: 1400%;
+}
+
 .cell {
   align-items: center;
   justify-content: center;
   height: 30px;
   width: 30px;
-  border: 1px solid rgb(72 72 72);
+  border: 1px solid #777;
 }
 
 .stone {
@@ -39,5 +46,9 @@
   justify-content: center;
   height: 100%;
   width: 100%;
-  background-color: rgb(87 87 87);
+  background-color: #aaa;
+  border-top: 4px solid #eee;
+  border-right: 4px solid #666;
+  border-bottom: 4px solid #666;
+  border-left: 4px solid #eee;
 }
