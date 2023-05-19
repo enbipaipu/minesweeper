@@ -72,7 +72,7 @@ const Home = () => {
 
   //userInputとbombMapを見てboardを作成
   const checkAround = (y: number, x: number) => {
-    let bombCount = 0;
+    let aroundBombCount = 0;
     for (const dir of directions) {
       //指定した座標の周りを調べる
       if (bombMap[y + dir[0]] === undefined || bombMap[x + dir[1]] === undefined) {
@@ -80,11 +80,11 @@ const Home = () => {
       } else if (bombMap[y + dir[0]][x + dir[1]] === 0) {
         //
       } else if (bombMap[y + dir[0]][x + dir[1]] === 1) {
-        bombCount += 1;
+        aroundBombCount += 1;
       }
     }
-    board[y][x] = bombCount;
-    if (bombCount === 0) {
+    board[y][x] = aroundBombCount;
+    if (aroundBombCount === 0) {
       for (const dir of directions) {
         //指定した座標の周りを調べる
         if (board[y + dir[0]] === undefined || board[x + dir[1]] === undefined) {
@@ -98,8 +98,10 @@ const Home = () => {
 
   //boardを調べる
   const makeBoard = () => {
-    const minusCount = 0;
-    console.log('66666666');
+    let bombCount = 0;
+
+    console.log('=============');
+    console.log('aaaaaaaaaaa');
     for (let i = 0; i < 9; i += 1) {
       for (let h = 0; h < 9; h += 1) {
         if (isFailure && bombMap[i][h]) {
@@ -107,26 +109,29 @@ const Home = () => {
           if (userInputs[i][h] === 1) {
             board[i][h] = 25;
           }
-        }
-
-        if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
+        } else if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
           checkAround(i, h);
-        }
-
-        if (newUserInputs[i][h] === 3) {
+          console.log('cccccccccccc');
+        } else if (newUserInputs[i][h] === 3) {
           board[i][h] = 10;
-        }
-        if (newUserInputs[i][h] === 2) {
+        } else if (newUserInputs[i][h] === 2) {
           board[i][h] = 9;
+        } else if (board[i][h] === -1 || board[i][h] === 9 || board[i][h] === 10) {
+          bombCount += 1;
+          console.log(i, h);
+          console.log(board[i][h]);
+          console.log(bombCount);
+          console.log('**********');
         }
       }
     }
-    console.log('----------');
-    console.log(minusCount);
-    // if (minusCount === 10) {
-    //   //にこちゃんをグラサンに変える
-    //   alert('終了');
-    // }
+    console.log('------------');
+    console.log('bbbbbbbbb');
+    console.log(bombCount);
+    if (bombCount === 10) {
+      //にこちゃんをグラサンに変える
+      alert('終了');
+    }
   };
 
   makeBoard();
@@ -188,38 +193,53 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.board}>
-        {board.map((row, y) =>
-          row.map((val, x) => (
-            <div
-              className={styles.cell}
-              key={`${x}-${y}`}
-              style={{ background: val === 25 ? '#f00' : '#fff0' }}
-              onClick={() => clickStone(y, x)}
-              onContextMenu={(event) => clickRight(y, x, event)}
-            >
-              {val !== 0 &&
-                (val !== -1 && val !== 9 && val !== 10 ? (
-                  <div
-                    className={styles.icon}
-                    style={{ backgroundPosition: `${-(val - 1) * 30}px` }}
-                  />
-                ) : (
-                  val < 11 && (
-                    <div className={styles.stone}>
-                      {board[y][x]}
-                      {(board[y][x] === 9 || board[y][x] === 10) && (
-                        <div
-                          className={styles.flag}
-                          style={{ backgroundPosition: `${-(val - 1) * 100}%` }}
-                        />
-                      )}
-                    </div>
-                  )
-                ))}
+      <div className={styles.under}>
+        <div className={styles.brother} />
+        <div className={styles.board}>
+          {board.map((row, y) =>
+            row.map((val, x) => (
+              <div
+                className={styles.cell}
+                key={`${x}-${y}`}
+                style={{ background: val === 25 ? '#f00' : '#fff0' }}
+                onClick={() => clickStone(y, x)}
+                onContextMenu={(event) => clickRight(y, x, event)}
+              >
+                {val !== 0 &&
+                  (val !== -1 && val !== 9 && val !== 10 ? (
+                    <div
+                      className={styles.icon}
+                      style={{ backgroundPosition: `${-(val - 1) * 30}px` }}
+                    />
+                  ) : (
+                    val < 11 && (
+                      <div className={styles.stone}>
+                        {board[y][x]}
+                        {(board[y][x] === 9 || board[y][x] === 10) && (
+                          <div
+                            className={styles.flag}
+                            style={{ backgroundPosition: `${-(val - 1) * 100}%` }}
+                          />
+                        )}
+                      </div>
+                    )
+                  ))}
+              </div>
+            ))
+          )}
+        </div>
+        <div className={styles.button}>
+          <div className={styles.triangle} />
+        </div>
+        <div className={styles.white}>
+          <div className={styles.square}>
+            <div className={styles.rod}>
+              <div className={styles.stick}>
+                <div className={styles.frame} />
+              </div>
             </div>
-          ))
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

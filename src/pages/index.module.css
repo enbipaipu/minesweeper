@@ -3,9 +3,32 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #fff;
   height: 100vh;
   min-height: 100vh;
   padding: 0 0.5rem;
+}
+
+.under {
+  background-color: #bbb;
+  height: 410px;
+  width: 310px;
+  border-top: 4px solid #eee;
+  border-right: 4px solid #666;
+  border-bottom: 4px solid #666;
+  border-left: 4px solid #eee;
+}
+
+.brother {
+  height: 65px;
+  width: 278px;
+  position: relative;
+  left: 12px;
+  top: 10px;
+  border-top: 4px solid #666;
+  border-right: 4px solid #eee;
+  border-bottom: 4px solid #eee;
+  border-left: 4px solid #666;
 }
 
 .board {
@@ -14,8 +37,96 @@
   align-items: center;
   justify-content: center;
   background-color: #ccc;
-  height: 270px;
-  width: 270px;
+  height: 278px;
+  width: 278px;
+  position: relative;
+  top: 18px;
+  left: 12px;
+  border-top: 4px solid #666;
+  border-right: 4px solid #eee;
+  border-bottom: 4px solid #eee;
+  border-left: 4px solid #666;
+}
+
+.button {
+  background-color: #ccc;
+  position: relative;
+  top: 24px;
+  left: 16px;
+  width: 30px; /* ボタンの幅を調整 */
+  height: 30px; /* ボタンの高さを調整 */
+  border-top: 3px solid #eee;
+  border-right: 3px solid #666;
+  border-bottom: 3px solid #666;
+  border-left: 3px solid #eee;
+
+  /* その他のスタイルプロパティを追加できます */
+}
+
+.triangle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 9px solid transparent;
+  border-left: 16px solid #eee;
+  border-top: 9px solid transparent;
+  position: relative;
+  left: 5px;
+  top: 3px;
+}
+
+.white {
+  background-color: #fff;
+  height: 15px;
+  width: 210px;
+  position: relative;
+  left: 70px;
+  border-top: 1px solid #666;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  border-left: 1px solid #666;
+}
+
+.square {
+  height: 22px;
+  width: 22px;
+  border-top: 2px solid #eee;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: 2px solid #eee;
+  position: relative;
+  outline: 0.5px solid #999;
+  outline-offset: -5px;
+  top: -5px;
+  left: -10px;
+}
+
+.rod {
+  background-color: #000;
+  height: 4px;
+  width: 1px;
+  position: relative;
+  left: 9px;
+}
+
+.stick {
+  background-color: #000;
+  height: 4px;
+  width: 1px;
+  position: relative;
+  top: 14px;
+}
+
+.frame {
+  height: 18px;
+  width: 18px;
+  border-top: 2.8px solid #ccc;
+  border-right: 2.8px solid #ccc;
+  border-bottom: 2.8px solid #ccc;
+  border-left: 2.8px solid #ccc;
+  position: relative;
+  left: -9px;
+  top: -14px;
 }
 
 .icon {
