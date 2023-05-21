@@ -7,7 +7,7 @@ const Home = () => {
   //1 -> 左クリック
   //2 -> 右クリック
   //3 -> 旗
-  const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>([
+  const effortUserInputs = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -17,12 +17,15 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  ];
+  const initialUserInputs: (0 | 1 | 2 | 3)[][] = effortUserInputs.map((row) =>
+    row.map((cell) => cell as 0 | 1 | 2 | 3)
+  );
+  const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(initialUserInputs);
 
   //0->ボムなし
   //1->ボムあり
-
-  const [bombMap, setBombMap] = useState([
+  const effortBombMap = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,7 +35,8 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  ];
+  const [bombMap, setBombMap] = useState(effortBombMap);
 
   // -1 -> 石
   // 0 -> 画像なしセル
@@ -51,6 +55,7 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ];
+  const brother: number[][] = [[12]];
   const newUserInputs = JSON.parse(JSON.stringify(userInputs));
   const newBombMap = JSON.parse(JSON.stringify(bombMap));
 
@@ -98,39 +103,34 @@ const Home = () => {
 
   //boardを調べる
   const makeBoard = () => {
-    let bombCount = 0;
-
-    console.log('=============');
-    console.log('aaaaaaaaaaa');
     for (let i = 0; i < 9; i += 1) {
       for (let h = 0; h < 9; h += 1) {
         if (isFailure && bombMap[i][h]) {
           board[i][h] = 11;
           if (userInputs[i][h] === 1) {
             board[i][h] = 25;
+            brother[0][0] = 14;
           }
         } else if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
           checkAround(i, h);
-          console.log('cccccccccccc');
         } else if (newUserInputs[i][h] === 3) {
           board[i][h] = 10;
         } else if (newUserInputs[i][h] === 2) {
           board[i][h] = 9;
-        } else if (board[i][h] === -1 || board[i][h] === 9 || board[i][h] === 10) {
-          bombCount += 1;
-          console.log(i, h);
-          console.log(board[i][h]);
-          console.log(bombCount);
-          console.log('**********');
         }
       }
     }
-    console.log('------------');
-    console.log('bbbbbbbbb');
-    console.log(bombCount);
+    let bombCount = 0;
+    for (let s = 0; s < 9; s += 1) {
+      for (let t = 0; t < 9; t += 1) {
+        if (board[s][t] === -1 || board[s][t] === 9 || board[s][t] === 10) {
+          bombCount += 1;
+        }
+      }
+    }
     if (bombCount === 10) {
       //にこちゃんをグラサンに変える
-      alert('終了');
+      brother[0][0] = 13;
     }
   };
 
@@ -138,13 +138,8 @@ const Home = () => {
   console.table(board);
 
   const firstBomb = (y: number, x: number, p: number) => {
-    for (let i = -1; i <= 1; i++) {
-      for (let h = -1; h <= 1; h++) {
-        newBombMap[y + i][x + h] = p;
-      }
-    }
+    newBombMap[y][x] = p;
   };
-
   //左クリック
   const clickStone = (y: number, x: number) => {
     if (board[y][x] !== 9 && board[y][x] !== 10) {
@@ -190,11 +185,27 @@ const Home = () => {
     }
     setUserInputs(newUserInputs);
   };
+  //ボードの初期化
+  const resetBoard = () => {
+    setUserInputs(initialUserInputs);
+    setBombMap(effortBombMap);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.under}>
-        <div className={styles.brother} />
+        <div className={styles.brother}>
+          {brother.map((row, y) =>
+            row.map((val, x) => (
+              <div
+                className={styles.reset}
+                key={`${x}-${y}`}
+                style={{ backgroundPosition: `${-(val - 1) * 30}px` }}
+                onClick={() => resetBoard()}
+              />
+            ))
+          )}
+        </div>
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((val, x) => (
@@ -214,7 +225,7 @@ const Home = () => {
                   ) : (
                     val < 11 && (
                       <div className={styles.stone}>
-                        {board[y][x]}
+                        {/* {board[y][x]} */}
                         {(board[y][x] === 9 || board[y][x] === 10) && (
                           <div
                             className={styles.flag}

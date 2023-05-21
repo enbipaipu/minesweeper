@@ -2,6 +2,7 @@ declare const styles:
   & Readonly<{ "container": string }>
   & Readonly<{ "under": string }>
   & Readonly<{ "brother": string }>
+  & Readonly<{ "reset": string }>
   & Readonly<{ "board": string }>
   & Readonly<{ "button": string }>
   & Readonly<{ "triangle": string }>
