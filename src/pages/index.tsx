@@ -55,9 +55,14 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ];
+
+  const [time, setTime] = useState({
+    time: 0,
+  });
   const brother: number[][] = [[12]];
   const newUserInputs = JSON.parse(JSON.stringify(userInputs));
   const newBombMap = JSON.parse(JSON.stringify(bombMap));
+  let newTime = JSON.parse(JSON.stringify(time));
 
   const isPlaying = userInputs.some((row) => row.some((input) => input !== 0));
   const isFailure = userInputs.some((row, y) =>
@@ -134,6 +139,11 @@ const Home = () => {
     }
   };
 
+  const makeTime = () => {
+    let nowTime = 0;
+    nowTime = (Date.now() - time) / 1000;
+  };
+
   makeBoard();
   console.table(board);
 
@@ -159,8 +169,11 @@ const Home = () => {
             n += 1;
           }
         }
+        //なぜnewBombMapは値の更新ができてnewTimeは値の更新ができないのか
+        newTime = Date.now();
         firstBomb(y, x, 0);
         setBombMap(newBombMap);
+        setTime(newTime);
       }
 
       setUserInputs(newUserInputs);
@@ -185,26 +198,27 @@ const Home = () => {
     }
     setUserInputs(newUserInputs);
   };
+
   //ボードの初期化
   const resetBoard = () => {
     setUserInputs(initialUserInputs);
     setBombMap(effortBombMap);
+    setTime({ time: 0 });
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.under}>
         <div className={styles.brother}>
-          {brother.map((row, y) =>
-            row.map((val, x) => (
-              <div
-                className={styles.reset}
-                key={`${x}-${y}`}
-                style={{ backgroundPosition: `${-(val - 1) * 30}px` }}
-                onClick={() => resetBoard()}
-              />
-            ))
-          )}
+          <div className={styles.flagcount} />
+
+          <div
+            className={styles.reset}
+            style={{ backgroundPosition: `90px` }}
+            onClick={() => resetBoard()}
+          />
+
+          <div className={styles.timer} />
         </div>
         <div className={styles.board}>
           {board.map((row, y) =>
