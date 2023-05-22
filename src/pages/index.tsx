@@ -139,10 +139,10 @@ const Home = () => {
     }
   };
 
-  const makeTime = () => {
-    let nowTime = 0;
-    nowTime = (Date.now() - time) / 1000;
-  };
+  // const makeTime = () => {
+  //   let nowTime = 0;
+  //   nowTime = (Date.now() - time) / 1000;
+  // };
 
   makeBoard();
   console.table(board);
