@@ -59,7 +59,8 @@ const Home = () => {
   const [time, setTime] = useState({
     time: 0,
   });
-  const brother: number[][] = [[12]];
+  let brother = 12;
+
   const newUserInputs = JSON.parse(JSON.stringify(userInputs));
   const newBombMap = JSON.parse(JSON.stringify(bombMap));
   let newTime = JSON.parse(JSON.stringify(time));
@@ -114,7 +115,7 @@ const Home = () => {
           board[i][h] = 11;
           if (userInputs[i][h] === 1) {
             board[i][h] = 25;
-            brother[0][0] = 14;
+            brother = 14;
           }
         } else if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
           checkAround(i, h);
@@ -135,7 +136,7 @@ const Home = () => {
     }
     if (bombCount === 10) {
       //にこちゃんをグラサンに変える
-      brother[0][0] = 13;
+      brother = 13;
     }
   };
 
@@ -154,9 +155,7 @@ const Home = () => {
   const clickStone = (y: number, x: number) => {
     if (board[y][x] !== 9 && board[y][x] !== 10) {
       console.log(y, x);
-
       newUserInputs[y][x] = 1;
-
       //ランダムにボムを生成
       if (!isPlaying) {
         firstBomb(y, x, 1);
@@ -175,9 +174,31 @@ const Home = () => {
         setBombMap(newBombMap);
         setTime(newTime);
       }
-
-      setUserInputs(newUserInputs);
     }
+
+    let nextFlagCount = 0;
+
+    for (let s = -1; s <= 1; s++) {
+      for (let t = -1; t <= 1; t++) {
+        if (bombMap[y + s] === undefined || bombMap[x + t] === undefined) {
+          //
+        } else if (board[y + s][x + t] === 10) {
+          nextFlagCount += 1;
+        }
+      }
+    }
+    if (board[y][x] > 0 && board[y][x] < 9) {
+      if (board[y][x] === nextFlagCount) {
+        for (let i = -1; i <= 1; i++) {
+          for (let h = -1; h <= 1; h++) {
+            if (userInputs[y + i][x + h] === 0 || userInputs[y + i][x + h] === 1) {
+              newUserInputs[y + i][x + h] = 1;
+            }
+          }
+        }
+      }
+    }
+    setUserInputs(newUserInputs);
   };
 
   //右クリック
@@ -214,7 +235,9 @@ const Home = () => {
 
           <div
             className={styles.reset}
-            style={{ backgroundPosition: `90px` }}
+            style={{
+              backgroundPosition: brother === 12 ? '90px' : brother === 13 ? '60px' : '30px',
+            }}
             onClick={() => resetBoard()}
           />
 
