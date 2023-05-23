@@ -36,14 +36,51 @@
   border-left: 4px solid #666;
 }
 
-.flagcount {
-  background-color: #e32a2a;
+.flagcountboard {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #000;
   height: 40px;
   width: 80px;
   border-top: 2px solid #666;
   border-right: 2px solid #eee;
   border-bottom: 2px solid #eee;
   border-left: 2px solid #666;
+}
+
+span.flagcount {
+  display: flex;
+  justify-content: center;
+  color: #f00;
+}
+
+.numbersboard {
+  justify-content: space-around;
+  align-items: center;
+  background-color: #000;
+  height: 36px;
+  width: 25px;
+}
+
+.numbers1 {
+  height: 17px;
+  width: 20px;
+  border-top: 5px solid #f00;
+  border-right: 5px solid #f00;
+  border-bottom: 3px solid #f00;
+  border-left: 5px solid #f00;
+  margin: 0 auto;
+}
+
+.numbers2 {
+  height: 17px;
+  width: 20px;
+  border-top: 3px solid #f00;
+  border-right: 5px solid #f00;
+  border-bottom: 5px solid #f00;
+  border-left: 5px solid #f00;
+  margin: 0 auto;
 }
 
 .reset {
@@ -81,102 +118,12 @@
   border-left: 4px solid #666;
 }
 
-.button {
-  display: none;
-  background-color: #ccc;
-  position: relative;
-  top: 24px;
-  left: 16px;
-  width: 30px; /* ボタンの幅を調整 */
-  height: 30px; /* ボタンの高さを調整 */
-  border-top: 3px solid #eee;
-  border-right: 3px solid #666;
-  border-bottom: 3px solid #666;
-  border-left: 3px solid #eee;
-
-  /* その他のスタイルプロパティを追加できます */
-}
-
-.triangle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 9px solid transparent;
-  border-left: 16px solid #eee;
-  border-top: 9px solid transparent;
-  position: relative;
-  left: 5px;
-  top: 3px;
-}
-
-.white {
-  display: none;
-  background-color: #fff;
-  height: 15px;
-  width: 210px;
-  position: relative;
-  left: 70px;
-  border-top: 1px solid #666;
-  border-right: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  border-left: 1px solid #666;
-}
-
-.square {
-  height: 22px;
-  width: 22px;
-  border-top: 2px solid #eee;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  border-left: 2px solid #eee;
-  position: relative;
-  outline: 0.5px solid #999;
-  outline-offset: -5px;
-  top: -5px;
-  left: -10px;
-}
-
-.rod {
-  background-color: #000;
-  height: 4px;
-  width: 1px;
-  position: relative;
-  left: 9px;
-}
-
-.stick {
-  background-color: #000;
-  height: 4px;
-  width: 1px;
-  position: relative;
-  top: 14px;
-}
-
-.frame {
-  height: 18px;
-  width: 18px;
-  border-top: 2.8px solid #ccc;
-  border-right: 2.8px solid #ccc;
-  border-bottom: 2.8px solid #ccc;
-  border-left: 2.8px solid #ccc;
-  position: relative;
-  left: -9px;
-  top: -14px;
-}
-
 .icon {
   align-items: center;
   justify-content: center;
   height: 30px;
   width: 30px;
   background-image: url('~/assets/images/icons.png');
-}
-
-.flag {
-  height: 100%;
-  width: 100%;
-  background-image: url('~/assets/images/icons.png');
-  background-size: 1400%;
 }
 
 .cell {
@@ -197,4 +144,11 @@
   border-right: 4px solid #666;
   border-bottom: 4px solid #666;
   border-left: 4px solid #eee;
+}
+
+.flag {
+  height: 100%;
+  width: 100%;
+  background-image: url('~/assets/images/icons.png');
+  background-size: 1400%;
 }

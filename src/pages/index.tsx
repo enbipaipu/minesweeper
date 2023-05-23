@@ -28,7 +28,7 @@ const Home = () => {
   const effortBombMap = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -56,14 +56,10 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ];
 
-  const [time, setTime] = useState({
-    time: 0,
-  });
   let brother = 12;
 
   const newUserInputs = JSON.parse(JSON.stringify(userInputs));
   const newBombMap = JSON.parse(JSON.stringify(bombMap));
-  let newTime = JSON.parse(JSON.stringify(time));
 
   const isPlaying = userInputs.some((row) => row.some((input) => input !== 0));
   const isFailure = userInputs.some((row, y) =>
@@ -80,6 +76,7 @@ const Home = () => {
     [0, 1],
     [-1, 1],
   ];
+  let end = true;
 
   //userInputとbombMapを見てboardを作成
   const checkAround = (y: number, x: number) => {
@@ -116,6 +113,7 @@ const Home = () => {
           if (userInputs[i][h] === 1) {
             board[i][h] = 25;
             brother = 14;
+            end = false;
           }
         } else if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
           checkAround(i, h);
@@ -137,101 +135,114 @@ const Home = () => {
     if (bombCount === 10) {
       //にこちゃんをグラサンに変える
       brother = 13;
+      end = false;
     }
   };
 
-  // const makeTime = () => {
-  //   let nowTime = 0;
-  //   nowTime = (Date.now() - time) / 1000;
-  // };
-
   makeBoard();
-  console.table(board);
 
   const firstBomb = (y: number, x: number, p: number) => {
     newBombMap[y][x] = p;
   };
   //左クリック
   const clickStone = (y: number, x: number) => {
-    if (board[y][x] !== 9 && board[y][x] !== 10) {
-      console.log(y, x);
-      newUserInputs[y][x] = 1;
-      //ランダムにボムを生成
-      if (!isPlaying) {
-        firstBomb(y, x, 1);
-        let n = 0;
-        while (n < 9) {
-          const a = Math.floor(Math.random() * 9);
-          const b = Math.floor(Math.random() * 9);
-          if (!newBombMap[a][b]) {
-            newBombMap[a][b] = 1;
-            n += 1;
+    if (end) {
+      if (board[y][x] !== 9 && board[y][x] !== 10) {
+        console.log(y, x);
+        newUserInputs[y][x] = 1;
+        //ランダムにボムを生成
+        if (!isPlaying) {
+          firstBomb(y, x, 1);
+          let n = 0;
+          while (n < 10) {
+            const a = Math.floor(Math.random() * 9);
+            const b = Math.floor(Math.random() * 9);
+            if (!newBombMap[a][b]) {
+              console.log(n);
+              newBombMap[a][b] = 1;
+              n += 1;
+            }
+          }
+
+          firstBomb(y, x, 0);
+          setBombMap(newBombMap);
+        }
+      }
+      //数字クリック
+      let nextFlagCount = 0;
+      for (let s = -1; s <= 1; s++) {
+        for (let t = -1; t <= 1; t++) {
+          if (bombMap[y + s] === undefined || bombMap[x + t] === undefined) {
+            //
+          } else if (board[y + s][x + t] === 10) {
+            nextFlagCount += 1;
           }
         }
-        //なぜnewBombMapは値の更新ができてnewTimeは値の更新ができないのか
-        newTime = Date.now();
-        firstBomb(y, x, 0);
-        setBombMap(newBombMap);
-        setTime(newTime);
       }
-    }
-
-    let nextFlagCount = 0;
-
-    for (let s = -1; s <= 1; s++) {
-      for (let t = -1; t <= 1; t++) {
-        if (bombMap[y + s] === undefined || bombMap[x + t] === undefined) {
-          //
-        } else if (board[y + s][x + t] === 10) {
-          nextFlagCount += 1;
-        }
-      }
-    }
-    if (board[y][x] > 0 && board[y][x] < 9) {
-      if (board[y][x] === nextFlagCount) {
-        for (let i = -1; i <= 1; i++) {
-          for (let h = -1; h <= 1; h++) {
-            if (userInputs[y + i][x + h] === 0 || userInputs[y + i][x + h] === 1) {
-              newUserInputs[y + i][x + h] = 1;
+      if (board[y][x] > 0 && board[y][x] < 9) {
+        if (board[y][x] === nextFlagCount) {
+          for (let i = -1; i <= 1; i++) {
+            for (let h = -1; h <= 1; h++) {
+              if (userInputs[y + i] !== undefined && userInputs[y + i][x + h] === 0) {
+                newUserInputs[y + i][x + h] = 1;
+              }
             }
           }
         }
       }
+      setUserInputs(newUserInputs);
     }
-    setUserInputs(newUserInputs);
   };
 
   //右クリック
   const clickRight = (y: number, x: number, event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log(y, x);
     const newUserInputs: (0 | 1 | 2 | 3)[][] = JSON.parse(JSON.stringify(userInputs));
-    switch (board[y][x]) {
-      case -1:
-        newUserInputs[y][x] = 3;
-        break;
-      case 9:
-        newUserInputs[y][x] = 0;
-        break;
-      case 10:
-        newUserInputs[y][x] = 2;
-        break;
+    if (end) {
+      switch (board[y][x]) {
+        case -1:
+          newUserInputs[y][x] = 3;
+          break;
+        case 9:
+          newUserInputs[y][x] = 0;
+          break;
+        case 10:
+          newUserInputs[y][x] = 2;
+          break;
+      }
+      setUserInputs(newUserInputs);
     }
-    setUserInputs(newUserInputs);
   };
 
   //ボードの初期化
   const resetBoard = () => {
     setUserInputs(initialUserInputs);
     setBombMap(effortBombMap);
-    setTime({ time: 0 });
   };
+
+  //flaguの表示用
+  let flagCount = 10;
+  for (let i = 0; i <= 9; i++) {
+    for (let h = 0; h <= 9; h++) {
+      if (board[i] === undefined || board[i][h] === undefined) {
+        //
+      } else if (board[i][h] === 10) {
+        flagCount--;
+      }
+    }
+  }
+  const a = flagCount % 10;
+  const b = Math.floor(flagCount / 10);
 
   return (
     <div className={styles.container}>
       <div className={styles.under}>
         <div className={styles.brother}>
-          <div className={styles.flagcount} />
+          <div className={styles.flagcountboard}>
+            <h1>
+              <span className={styles.flagcount}>{flagCount}</span>
+            </h1>
+          </div>
 
           <div
             className={styles.reset}
@@ -262,7 +273,6 @@ const Home = () => {
                   ) : (
                     val < 11 && (
                       <div className={styles.stone}>
-                        {/* {board[y][x]} */}
                         {(board[y][x] === 9 || board[y][x] === 10) && (
                           <div
                             className={styles.flag}
@@ -275,18 +285,6 @@ const Home = () => {
               </div>
             ))
           )}
-        </div>
-        <div className={styles.button}>
-          <div className={styles.triangle} />
-        </div>
-        <div className={styles.white}>
-          <div className={styles.square}>
-            <div className={styles.rod}>
-              <div className={styles.stick}>
-                <div className={styles.frame} />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
