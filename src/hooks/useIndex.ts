@@ -53,9 +53,6 @@ export const useIndex = () => {
   const newBombMap = JSON.parse(JSON.stringify(bombMap));
 
   const isPlaying = userInputs.some((row) => row.some((input) => input !== 0));
-  const isFailure = userInputs.some((row, y) =>
-    row.some((input, x) => input === 1 && bombMap[y][x] === 1)
-  );
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -72,53 +69,51 @@ export const useIndex = () => {
   };
   //左クリック
   const clickStone = (y: number, x: number) => {
-    if (play) {
-      if (end) {
-        if (board[y][x] !== 9 && board[y][x] !== 10) {
-          console.log(y, x);
-          newUserInputs[y][x] = 1;
-          //ランダムにボムを生成
-          if (!isPlaying) {
-            firstBomb(y, x, 1);
-            let n = 0;
-            while (n < 10) {
-              const a = Math.floor(Math.random() * 9);
-              const b = Math.floor(Math.random() * 9);
-              if (!newBombMap[a][b]) {
-                console.log(n);
-                newBombMap[a][b] = 1;
-                n += 1;
-              }
-            }
-            firstBomb(y, x, 0);
-            setBombMap(newBombMap);
-          }
-        }
-      }
-      //数字クリック
-      let nextFlagCount = 0;
-      for (let s = -1; s <= 1; s++) {
-        for (let t = -1; t <= 1; t++) {
-          if (bombMap[y + s] === undefined || bombMap[x + t] === undefined) {
-            //
-          } else if (board[y + s][x + t] === 10) {
-            nextFlagCount += 1;
-          }
-        }
-      }
-      if (board[y][x] > 0 && board[y][x] < 9) {
-        if (board[y][x] === nextFlagCount) {
-          for (let i = -1; i <= 1; i++) {
-            for (let h = -1; h <= 1; h++) {
-              if (userInputs[y + i] !== undefined && userInputs[y + i][x + h] === 0) {
-                newUserInputs[y + i][x + h] = 1;
-              }
+    if (end) {
+      if (board[y][x] !== 9 && board[y][x] !== 10) {
+        console.log(y, x);
+        newUserInputs[y][x] = 1;
+        //ランダムにボムを生成
+        if (!isPlaying) {
+          firstBomb(y, x, 1);
+          let n = 0;
+          while (n < 10) {
+            const a = Math.floor(Math.random() * 9);
+            const b = Math.floor(Math.random() * 9);
+            if (!newBombMap[a][b]) {
+              console.log(n);
+              newBombMap[a][b] = 1;
+              n += 1;
             }
           }
+          firstBomb(y, x, 0);
+          setBombMap(newBombMap);
         }
       }
-      setUserInputs(newUserInputs);
     }
+    //数字クリック
+    let nextFlagCount = 0;
+    for (let s = -1; s <= 1; s++) {
+      for (let t = -1; t <= 1; t++) {
+        if (bombMap[y + s] === undefined || bombMap[x + t] === undefined) {
+          //
+        } else if (board[y + s][x + t] === 10) {
+          nextFlagCount += 1;
+        }
+      }
+    }
+    if (board[y][x] > 0 && board[y][x] < 9) {
+      if (board[y][x] === nextFlagCount) {
+        for (let i = -1; i <= 1; i++) {
+          for (let h = -1; h <= 1; h++) {
+            if (userInputs[y + i] !== undefined && userInputs[y + i][x + h] === 0) {
+              newUserInputs[y + i][x + h] = 1;
+            }
+          }
+        }
+      }
+    }
+    setUserInputs(newUserInputs);
   };
 
   //右クリック
