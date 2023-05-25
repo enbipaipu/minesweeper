@@ -9,6 +9,7 @@ declare const styles:
   & Readonly<{ "numbers2": string }>
   & Readonly<{ "reset": string }>
   & Readonly<{ "timer": string }>
+  & Readonly<{ "timecount": string }>
   & Readonly<{ "board": string }>
   & Readonly<{ "icon": string }>
   & Readonly<{ "cell": string }>

@@ -95,6 +95,9 @@ span.flagcount {
 }
 
 .timer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   background-color: #000;
   height: 40px;
   width: 80px;
@@ -102,6 +105,10 @@ span.flagcount {
   border-right: 2px solid #eee;
   border-bottom: 2px solid #eee;
   border-left: 2px solid #666;
+}
+
+span.timecount {
+  color: #f00;
 }
 
 .board {
