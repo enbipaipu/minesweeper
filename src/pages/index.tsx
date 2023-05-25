@@ -1,7 +1,6 @@
 import type { MouseEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './index.module.css';
-
 const Home = () => {
   //0 -> 未入力
   //1 -> 左クリック
@@ -38,6 +37,9 @@ const Home = () => {
   ];
   const [bombMap, setBombMap] = useState(effortBombMap);
 
+  const [seconds, setSeconds] = useState(0);
+
+  const [play, setPlay] = useState(false);
   // -1 -> 石
   // 0 -> 画像なしセル
   //1~8 -> 数字セル
@@ -141,31 +143,44 @@ const Home = () => {
 
   makeBoard();
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds((prevSeconds) => prevSeconds + 1);
+    }, 1000);
+
+    // コンポーネントがアンマウントされたときにタイマーをクリアする
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   const firstBomb = (y: number, x: number, p: number) => {
     newBombMap[y][x] = p;
   };
   //左クリック
   const clickStone = (y: number, x: number) => {
-    if (end) {
-      if (board[y][x] !== 9 && board[y][x] !== 10) {
-        console.log(y, x);
-        newUserInputs[y][x] = 1;
-        //ランダムにボムを生成
-        if (!isPlaying) {
-          firstBomb(y, x, 1);
-          let n = 0;
-          while (n < 10) {
-            const a = Math.floor(Math.random() * 9);
-            const b = Math.floor(Math.random() * 9);
-            if (!newBombMap[a][b]) {
-              console.log(n);
-              newBombMap[a][b] = 1;
-              n += 1;
+    if (play) {
+      if (end) {
+        if (board[y][x] !== 9 && board[y][x] !== 10) {
+          console.log(y, x);
+          newUserInputs[y][x] = 1;
+          //ランダムにボムを生成
+          if (!isPlaying) {
+            firstBomb(y, x, 1);
+            let n = 0;
+            while (n < 10) {
+              const a = Math.floor(Math.random() * 9);
+              const b = Math.floor(Math.random() * 9);
+              if (!newBombMap[a][b]) {
+                console.log(n);
+                newBombMap[a][b] = 1;
+                n += 1;
+              }
             }
+            firstBomb(y, x, 0);
+            setBombMap(newBombMap);
           }
-
-          firstBomb(y, x, 0);
-          setBombMap(newBombMap);
         }
       }
       //数字クリック
@@ -220,7 +235,7 @@ const Home = () => {
     setBombMap(effortBombMap);
   };
 
-  //flaguの表示用
+  //flagの表示用
   let flagCount = 10;
   for (let i = 0; i <= 9; i++) {
     for (let h = 0; h <= 9; h++) {
@@ -231,8 +246,6 @@ const Home = () => {
       }
     }
   }
-  const a = flagCount % 10;
-  const b = Math.floor(flagCount / 10);
 
   return (
     <div className={styles.container}>
@@ -252,7 +265,11 @@ const Home = () => {
             onClick={() => resetBoard()}
           />
 
-          <div className={styles.timer} />
+          <div className={styles.timer}>
+            <h1>
+              <span className={styles.timecount}>{seconds}</span>
+            </h1>
+          </div>
         </div>
         <div className={styles.board}>
           {board.map((row, y) =>
