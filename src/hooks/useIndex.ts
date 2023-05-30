@@ -22,6 +22,7 @@ export const useIndex = () => {
   );
   const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(initialUserInputs);
 
+  const [play, setPlay] = useState(false);
   //0->ボムなし
   //1->ボムあり
   const effortBombMap = [
@@ -37,11 +38,10 @@ export const useIndex = () => {
   ];
 
   const [bombMap, setBombMap] = useState(effortBombMap);
-  const { board, end, brother } = useBoard({ userInputs, bombMap });
+  const { board, end, brother } = useBoard({ userInputs, bombMap, setPlay });
 
   const [seconds, setSeconds] = useState(0);
 
-  const [play, setPlay] = useState(false);
   // -1 -> 石
   // 0 -> 画像なしセル
   //1~8 -> 数字セル
@@ -55,14 +55,16 @@ export const useIndex = () => {
   const isPlaying = userInputs.some((row) => row.some((input) => input !== 0));
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((prevSeconds) => prevSeconds + 1);
-    }, 1000);
-    // コンポーネントがアンマウントされたときにタイマーをクリアする
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+    if (play) {
+      const timer = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+      // コンポーネントがアンマウントされたときにタイマーをクリアする
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [play]);
 
   const firstBomb = (y: number, x: number, p: number) => {
     newBombMap[y][x] = p;
@@ -86,6 +88,7 @@ export const useIndex = () => {
               n += 1;
             }
           }
+          setPlay(true);
           firstBomb(y, x, 0);
           setBombMap(newBombMap);
         }
@@ -140,6 +143,8 @@ export const useIndex = () => {
   const resetBoard = () => {
     setUserInputs(initialUserInputs);
     setBombMap(effortBombMap);
+    setPlay(false);
+    setSeconds(0);
   };
 
   //flagの表示用

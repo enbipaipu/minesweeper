@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 
-export const useBoard = ({
+export function useBoard({
   userInputs,
   bombMap,
+  setPlay,
 }: {
   userInputs: (0 | 1 | 2 | 3)[][];
   bombMap: number[][];
-}) => {
+  setPlay: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const { board, brother, end } = useMemo(() => {
     const board: number[][] = [
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -73,6 +75,7 @@ export const useBoard = ({
               board[i][h] = 25;
               brother = 14;
               end = false;
+              setPlay(false);
             }
           } else if (userInputs[i][h] === 1 && bombMap[i][h] === 0) {
             checkAround(i, h);
@@ -95,12 +98,13 @@ export const useBoard = ({
         //にこちゃんをグラサンに変える
         brother = 13;
         end = false;
+        setPlay(false);
       }
     };
 
     makeBoard();
 
     return { board, brother, end };
-  }, [bombMap, userInputs]);
+  }, [bombMap, userInputs, setPlay]);
   return { board, brother, end };
-};
+}
